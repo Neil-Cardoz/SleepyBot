@@ -1,0 +1,16 @@
+# Model artifacts (too large for git)
+*.joblib
+*.onnx
+
+# Training data CSVs
+compressed_*.csv
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+
+# OS
+.DS_Store
+Thumbs.db

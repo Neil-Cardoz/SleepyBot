@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SleepSense AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="/static/index.css">
+</head>
+<body>
+
+<!-- Navbar -->
+<nav id="navbar">
+    <div class="nav-left">
+        <div class="logo-dot"></div>
+        <span class="logo-text">SleepSense <b>AI</b></span>
+    </div>
+    <div class="nav-right">
+        <div class="chip" id="chip-mqtt"><span class="dot off" id="dot-mqtt"></span><span id="lbl-mqtt">MQTT</span></div>
+        <div class="chip" id="chip-ws"><span class="dot off" id="dot-ws"></span><span id="lbl-ws">WS</span></div>
+        <span class="clock" id="clock">--:--:--</span>
+    </div>
+</nav>
+
+<!-- Main grid -->
+<main id="grid">
+
+    <!-- Big heart rate card -->
+    <section class="card card-bpm" id="card-bpm">
+        <div class="bpm-ring" id="bpm-ring">
+            <svg viewBox="0 0 120 120" class="bpm-svg">
+                <circle cx="60" cy="60" r="54" class="ring-bg"/>
+                <circle cx="60" cy="60" r="54" class="ring-fg" id="ring-fg"/>
+            </svg>
+            <div class="bpm-inner">
+                <span class="bpm-val" id="bpm-val">--</span>
+                <span class="bpm-unit">BPM</span>
+            </div>
+        </div>
+        <div class="bpm-label">Heart Rate</div>
+        <div class="bpm-sub" id="bpm-sub">Waiting for ESP32...</div>
+    </section>
+
+    <!-- Sleep stage card -->
+    <section class="card card-stage" id="card-stage">
+        <div class="stage-badge" id="stage-badge">---</div>
+        <div class="stage-title" id="stage-title">Waiting for data</div>
+        <div class="stage-desc" id="stage-desc">Need 64 samples to start predicting</div>
+        <div class="conf-bar-wrap">
+            <div class="conf-bar" id="conf-bar"></div>
+        </div>
+        <div class="conf-text" id="conf-text">0% confidence</div>
+    </section>
+
+    <!-- Stats row -->
+    <section class="card card-stats" id="card-stats">
+        <div class="s"><span class="sv" id="sv-samples">0</span><span class="sl">Samples</span></div>
+        <div class="s"><span class="sv" id="sv-pred">0</span><span class="sl">Predictions</span></div>
+        <div class="s"><span class="sv" id="sv-acc">99.8%</span><span class="sl">Model</span></div>
+        <div class="s"><span class="sv" id="sv-up">0s</span><span class="sl">Uptime</span></div>
+    </section>
+
+    <!-- HR chart -->
+    <section class="card card-chart" id="card-hr-chart">
+        <h3>Heart Rate Trend</h3>
+        <div class="chart-box"><canvas id="chartHR"></canvas></div>
+    </section>
+
+    <!-- Hypnogram -->
+    <section class="card card-chart" id="card-hypno">
+        <h3>Hypnogram</h3>
+        <div class="chart-box"><canvas id="chartHypno"></canvas></div>
+    </section>
+
+    <!-- Accel bars -->
+    <section class="card card-accel" id="card-accel">
+        <h3>Accelerometer</h3>
+        <div class="ax-row"><span class="ax-l ax-x">X</span><div class="ax-track"><div class="ax-bar bx" id="bar-x"></div></div><span class="ax-v" id="val-x">0</span></div>
+        <div class="ax-row"><span class="ax-l ax-y">Y</span><div class="ax-track"><div class="ax-bar by" id="bar-y"></div></div><span class="ax-v" id="val-y">0</span></div>
+        <div class="ax-row"><span class="ax-l ax-z">Z</span><div class="ax-track"><div class="ax-bar bz" id="bar-z"></div></div><span class="ax-v" id="val-z">0</span></div>
+    </section>
+
+    <!-- Distribution -->
+    <section class="card card-dist" id="card-dist">
+        <h3>Stage Distribution</h3>
+        <div class="dist-grid" id="dist-grid">
+            <div class="dr" data-s="W"><span class="dl">Wake</span><div class="dt"><div class="df" id="df-W"></div></div><span class="dp" id="dp-W">0%</span></div>
+            <div class="dr" data-s="N1"><span class="dl">N1 Light</span><div class="dt"><div class="df" id="df-N1"></div></div><span class="dp" id="dp-N1">0%</span></div>
+            <div class="dr" data-s="N2"><span class="dl">N2 Mod</span><div class="dt"><div class="df" id="df-N2"></div></div><span class="dp" id="dp-N2">0%</span></div>
+            <div class="dr" data-s="N3"><span class="dl">N3 Deep</span><div class="dt"><div class="df" id="df-N3"></div></div><span class="dp" id="dp-N3">0%</span></div>
+            <div class="dr" data-s="R"><span class="dl">REM</span><div class="dt"><div class="df" id="df-R"></div></div><span class="dp" id="dp-R">0%</span></div>
+            <div class="dr" data-s="P"><span class="dl">Pre-sleep</span><div class="dt"><div class="df" id="df-P"></div></div><span class="dp" id="dp-P">0%</span></div>
+        </div>
+    </section>
+</main>
+
+<!-- Sim buttons -->
+<div class="sim" id="sim">
+    <button id="btn-sim" onclick="doSim()">Simulate</button>
+    <button id="btn-auto" onclick="toggleAuto()">Auto</button>
+</div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
